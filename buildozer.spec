@@ -24,47 +24,31 @@ orientation = portrait
 # Fullscreen
 fullscreen = 0
 
-# Python for Android (p4a) branch
-p4a.branch = develop
-
 # Android SDK / NDK / API
-android.api = 33
+android.api = 34
 android.minapi = 21
-android.ndk = 25b
-android.sdk = 33
-android.cmd = 33.0.3
+android.ndk = 27c
+android.sdk = 34
+android.cmd = 34.0.0
 
 # Permissions
 android.permissions = INTERNET, ACCESS_NETWORK_STATE, ACCESS_WIFI_STATE
 
-# Architectures
-android.archs = arm64-v8a, armeabi-v7a
+# Architectures (remove armeabi-v7a for faster build, add back if needed)
+android.archs = arm64-v8a
 
 # App entry point
 android.entrypoint = main.py
 source.entrypoint = main.py
 
-# Presplash (optional - uncomment if you have images)
-# android.presplash_color = #FFFFFF
-# android.presplash_image = presplash.png
-
-# App icon (optional)
-# android.icon = icon.png
-
-# Debug mode (set to 0 for release build)
+# Debug mode
 android.debug = 1
 
-# Java max heap (increase for large builds)
+# Accept SDK license automatically
 android.accept_sdk_license = True
-
-# Extra Java dependencies (if needed)
-# android.gradle_depends = ...
 
 # Log level
 log_level = 2
-
-# Architecture filter
-android.arch = arm64-v8a
 
 [buildozer]
 
