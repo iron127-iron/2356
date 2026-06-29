@@ -1,0 +1,41 @@
+name: Build Android APK
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install PyRoxy dependency
+        run: |
+          pip install "pyroxy @ git+https://github.com/MatrixTM/PyRoxy.git"
+          mkdir -p libs
+          cp -r $(python -c "import PyRoxy; import os; print(os.path.dirname(PyRoxy.__file__))") libs/PyRoxy
+
+      - name: Install Buildozer & dependencies
+        run: |
+          pip install --upgrade buildozer cython
+          sudo apt update
+          sudo apt install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
+
+      - name: Build APK with Buildozer
+        run: |
+          buildozer android debug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: MHDDoS-APK
+          path: bin/*.apk
