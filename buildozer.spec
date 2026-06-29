@@ -8,15 +8,12 @@ package.domain = org.mhddos
 # Source
 source.dir = .
 source.include_exts = py,png,jpg,kv,atlas,txt,json,mmdb
-source.include_patterns = libs/PyRoxy/**, files/**, config.json, help.txt
 
 # Version
 version = 2.4.4
-version.regex = __version__\s*=\s*['"](.*)['"]
-version.filename = start.py
 
 # Requirements (pip packages)
-requirements = python3,kivy,impacket,dnspython,requests,cloudscraper,certifi,psutil,icmplib,pyasn1,yarl,pysocks,maxminddb,six
+requirements = python3,kivy,impacket,dnspython,requests,cloudscraper,psutil,icmplib,pyasn1,yarl,pysocks,maxminddb,six
 
 # Orientation
 orientation = portrait
@@ -39,13 +36,9 @@ android.archs = arm64-v8a
 
 # App entry point
 android.entrypoint = main.py
-source.entrypoint = main.py
 
 # Debug mode
 android.debug = 1
-
-# Accept SDK license automatically
-android.accept_sdk_license = True
 
 # Log level
 log_level = 2
