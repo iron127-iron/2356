@@ -25,8 +25,6 @@ fullscreen = 0
 android.api = 34
 android.minapi = 21
 android.ndk = 27c
-android.sdk = 34
-android.cmd = 34.0.0
 
 # Permissions
 android.permissions = INTERNET, ACCESS_NETWORK_STATE, ACCESS_WIFI_STATE
